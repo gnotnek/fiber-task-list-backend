@@ -32,3 +32,7 @@ func InitDB() (*gorm.DB, error) {
 
 	return db, nil
 }
+
+type DB struct {
+	*gorm.DB
+}
