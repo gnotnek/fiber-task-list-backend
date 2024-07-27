@@ -1,38 +1,37 @@
 package database
 
 import (
-	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/gnotnek/fiber-task-list-backend/internal/models"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
 )
 
-func InitDB() (*gorm.DB, error) {
-	err := godotenv.Load()
+var DB *gorm.DB
+
+func InitDB() {
+	err := godotenv.Load(filepath.Join("..", ".env"))
 	if err != nil {
-		return nil, fmt.Errorf("error loading .env file: %w", err)
+		log.Fatal("Error loading .env file")
 	}
 
-	dbUrl := os.Getenv("DATABASE_URL")
-	if dbUrl == "" {
-		return nil, fmt.Errorf("DATABASE_URL is not set")
-	}
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbName := os.Getenv("DB_NAME")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbSslMode := os.Getenv("DB_SSLMODE")
 
-	db, err := gorm.Open("postgres", dbUrl)
+	dsn := "host=" + dbHost + " port=" + dbPort + " user=" + dbUser + " dbname=" + dbName + " password=" + dbPassword + " sslmode=" + dbSslMode
+	db, err := gorm.Open("postgres", dsn)
 	if err != nil {
-		return nil, fmt.Errorf("error connecting to database: %w", err)
+		log.Fatalf("Error connecting to database: %v", err)
 	}
 
-	err = db.AutoMigrate(models.Todo{}).Error
-	if err != nil {
-		return nil, fmt.Errorf("error migrating database: %w", err)
-	}
-
-	return db, nil
-}
-
-type DB struct {
-	*gorm.DB
+	db.AutoMigrate(&models.Todo{})
+	DB = db
 }

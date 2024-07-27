@@ -5,7 +5,7 @@ import (
 )
 
 type Todo struct {
-	ID          uuid.UUID `gorm:"type:uuid;primary_key;default:uuid_generate_v4()"`
+	ID          uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:uuid_generate_v4()"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	Completed   bool      `json:"completed"`
