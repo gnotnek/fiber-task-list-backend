@@ -6,11 +6,19 @@ import (
 )
 
 func SetupRoutes(app *fiber.App) {
-	app.Get("/todos", handlers.GetTodos)
-	app.Get("/todos/:id", handlers.GetTodoByID)
-	app.Post("/todos", handlers.CreateTodo)
-	app.Delete("/todos/:id", handlers.DeleteTodo)
-	app.Put("/todos", handlers.UpdateTodo)
-	app.Put("/todos/:id", handlers.UpdateTodoByID)
-	app.Put("/todos/complete", handlers.CompleteAllTodos)
+	todos := app.Group("/todos")
+	todos.Get("/", handlers.GetTodos)
+	todos.Get("/:id", handlers.GetTodoByID)
+	todos.Post("/", handlers.CreateTodo)
+	todos.Delete("/:id", handlers.DeleteTodo)
+	todos.Put("/", handlers.UpdateTodo)
+	todos.Put("/:id", handlers.UpdateTodoByID)
+	todos.Put("/complete", handlers.CompleteAllTodos)
+
+	users := app.Group("/user")
+	users.Get("/", handlers.GetUsers)
+	users.Get("/:id", handlers.GetUserByID)
+	users.Post("/", handlers.CreateUser)
+
+	app.Use(func(c *fiber.Ctx) error { return c.SendStatus(404) })
 }
