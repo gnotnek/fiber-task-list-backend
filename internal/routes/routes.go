@@ -6,16 +6,17 @@ import (
 )
 
 func SetupRoutes(app *fiber.App) {
+	// Todos
 	todos := app.Group("/todos")
 	todos.Get("/", handlers.GetTodos)
 	todos.Get("/:id", handlers.GetTodoByID)
 	todos.Post("/", handlers.CreateTodo)
 	todos.Delete("/:id", handlers.DeleteTodo)
-	todos.Put("/", handlers.UpdateTodo)
 	todos.Put("/:id", handlers.UpdateTodoByID)
 	todos.Put("/complete", handlers.CompleteAllTodos)
 
-	users := app.Group("/user")
+	// Users
+	users := app.Group("/users")
 	users.Get("/", handlers.GetUsers)
 	users.Get("/:id", handlers.GetUserByID)
 	users.Post("/", handlers.CreateUser)

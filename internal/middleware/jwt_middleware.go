@@ -10,6 +10,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// doesnt work yet, because i dont know how to implement it
 func JWTMiddleware() string {
 	err := godotenv.Load(filepath.Join("..", ".env"))
 	if err != nil {
