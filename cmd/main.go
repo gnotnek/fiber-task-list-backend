@@ -33,6 +33,7 @@ func main() {
 	database.InitDB()
 
 	app := fiber.New()
+	// Register swagger handler
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	routes.SetupRoutes(app)

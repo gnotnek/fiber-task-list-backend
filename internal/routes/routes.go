@@ -15,11 +15,11 @@ func SetupRoutes(app *fiber.App) {
 	todos.Put("/:id", handlers.UpdateTodoByID)
 	todos.Put("/complete", handlers.CompleteAllTodos)
 
-	// Users
-	users := app.Group("/users")
-	users.Get("/", handlers.GetUsers)
-	users.Get("/:id", handlers.GetUserByID)
-	users.Post("/", handlers.CreateUser)
+	// Register
+	app.Post("/register", handlers.SignUp)
+
+	// Login
+	app.Post("/login", handlers.Login)
 
 	app.Use(func(c *fiber.Ctx) error { return c.SendStatus(404) })
 }
