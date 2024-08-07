@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gnotnek/fiber-task-list-backend/internal/database"
+	"github.com/gnotnek/fiber-task-list-backend/internal/middleware"
 	"github.com/gnotnek/fiber-task-list-backend/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -80,10 +81,17 @@ func Login(c *fiber.Ctx) error {
 		return c.Status(400).SendString("invalid credentials")
 	}
 
-	return c.JSON(fiber.Map{
-		"message": "success",
-		"token":   "token", // not implemented yet
+	token, err := middleware.CreateToken(dbUser.ID)
+	if err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+
+	c.Cookie(&fiber.Cookie{
+		Name:  "jwt",
+		Value: token,
 	})
+
+	return c.Next()
 }
 
 func HashPassword(password string) (string, error) {
