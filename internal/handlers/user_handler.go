@@ -9,43 +9,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// GetUsers godoc
-// @Summary Get all users
-// @Description Get all users
-// @Tags users
-// @Produce json
-// @Success 200 {array} models.User
-// @Router /users [get]
-func GetUsers(c *fiber.Ctx) error {
-	var users []models.User
-	database.DB.Find(&users)
-	return c.JSON(users)
-}
-
-// GetUserByID godoc
-// @Summary Get user by ID
-// @Description Get user by ID
-// @Tags users
-// @Produce json
-// @Param id path string true "User ID"
-// @Success 200 {object} models.User
-// @Router /users/{id} [get]
-func GetUserByID(c *fiber.Ctx) error {
-	id := c.Params("id")
-	var user models.User
-	database.DB.Where("id = ?", id).First(&user)
-	return c.JSON(user)
-}
-
 // SignUp godoc
-// @Summary Create a new user
-// @Description Create a new user
+// @Summary Sign up
+// @Description Sign up
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param user body models.User true "User object"
-// @Success 200 {object} models.User
-// @Router /users [post]
+// @Param user body models.User true "User info"
+// @Router /register [post]
 func SignUp(c *fiber.Ctx) error {
 	user := new(models.User)
 	if err := c.BodyParser(user); err != nil {
@@ -62,6 +33,15 @@ func SignUp(c *fiber.Ctx) error {
 	return c.JSON(user)
 }
 
+// Login godoc
+// @Summary Login
+// @Description Login
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body struct{email string, password string} true "User credentials"
+// @Success 200
+// @Router /login [post]
 func Login(c *fiber.Ctx) error {
 	var user struct {
 		Email    string `json:"email"`

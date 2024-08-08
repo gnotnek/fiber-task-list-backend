@@ -26,9 +26,8 @@ import (
 // @router /todos [put]
 // @router /todos/{id} [put]
 // @router /todos/complete [put]
-// @router /users [get]
-// @router /users/{id} [get]
-// @router /users [post]
+// @router /register [post]
+// @router /login [post]
 func main() {
 	database.InitDB()
 
