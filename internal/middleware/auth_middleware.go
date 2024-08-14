@@ -35,7 +35,7 @@ func ValidateToken(c *fiber.Ctx) (*Claims, error) {
 		log.Fatal("Error loading .env file")
 	}
 
-	tokenString := c.Cookies("jwt")
+	tokenString := c.Get("Authorization")[7:]
 	claims := &Claims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
@@ -51,4 +51,14 @@ func ValidateToken(c *fiber.Ctx) (*Claims, error) {
 	}
 
 	return claims, nil
+}
+
+func AuthRequired(c *fiber.Ctx) error {
+	claims, err := ValidateToken(c)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).SendString("Unauthorized")
+	}
+
+	c.Locals("user", claims.UserID)
+	return c.Next()
 }

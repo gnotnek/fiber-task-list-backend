@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/gnotnek/fiber-task-list-backend/internal/database"
 	"github.com/gnotnek/fiber-task-list-backend/internal/middleware"
 	"github.com/gnotnek/fiber-task-list-backend/internal/models"
@@ -23,14 +26,15 @@ func SignUp(c *fiber.Ctx) error {
 		return c.Status(400).SendString(err.Error())
 	}
 
-	hash, err := HashPassword(user.Password)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return c.Status(500).SendString(err.Error())
 	}
 
-	user.Password = hash
+	user.Password = string(hashedPassword)
+
 	database.DB.Create(&user)
-	return c.JSON(user)
+	return c.JSON(fiber.Map{"message": "user created"})
 }
 
 // Login godoc
@@ -47,7 +51,7 @@ func Login(c *fiber.Ctx) error {
 		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
-	if err := c.BodyParser(user); err != nil {
+	if err := c.BodyParser(&user); err != nil {
 		return c.Status(400).SendString(err.Error())
 	}
 
@@ -57,8 +61,11 @@ func Login(c *fiber.Ctx) error {
 		return c.Status(400).SendString("user not found")
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(user.Password)); err != nil {
-		return c.Status(400).SendString("invalid credentials")
+	fmt.Println(dbUser.Password)
+
+	err := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(user.Password))
+	if err != nil {
+		return c.Status(401).SendString("invalid password")
 	}
 
 	token, err := middleware.CreateToken(dbUser.ID)
@@ -67,17 +74,13 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	c.Cookie(&fiber.Cookie{
-		Name:  "jwt",
-		Value: token,
+		Name:     "jwt",
+		Value:    token,
+		Expires:  time.Now().Add(time.Hour * 24),
+		HTTPOnly: true,
+		Secure:   true,
+		SameSite: "Lax",
 	})
 
-	return c.Next()
-}
-
-func HashPassword(password string) (string, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
-	if err != nil {
-		return "", err
-	}
-	return string(hash), nil
+	return c.JSON(fiber.Map{"message": "login success!"})
 }

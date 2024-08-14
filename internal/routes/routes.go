@@ -2,18 +2,24 @@ package routes
 
 import (
 	"github.com/gnotnek/fiber-task-list-backend/internal/handlers"
+	"github.com/gnotnek/fiber-task-list-backend/internal/middleware"
 	"github.com/gofiber/fiber/v2"
 )
 
 func SetupRoutes(app *fiber.App) {
+	//index
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Todo list API")
+	})
+
 	// Todos
 	todos := app.Group("/todos")
-	todos.Get("/", handlers.GetTodos)
-	todos.Get("/:id", handlers.GetTodoByID)
-	todos.Post("/", handlers.CreateTodo)
-	todos.Delete("/:id", handlers.DeleteTodo)
-	todos.Put("/:id", handlers.UpdateTodoByID)
-	todos.Put("/complete", handlers.CompleteAllTodos)
+	todos.Get("/", middleware.AuthRequired, handlers.GetTodos)
+	todos.Get("/:id", middleware.AuthRequired, handlers.GetTodoByID)
+	todos.Post("/", middleware.AuthRequired, handlers.CreateTodo)
+	todos.Delete("/:id", middleware.AuthRequired, handlers.DeleteTodo)
+	todos.Put("/:id", middleware.AuthRequired, handlers.UpdateTodoByID)
+	todos.Put("/complete", middleware.AuthRequired, handlers.CompleteAllTodos)
 
 	// Register
 	app.Post("/register", handlers.SignUp)

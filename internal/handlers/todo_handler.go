@@ -4,6 +4,7 @@ import (
 	"github.com/gnotnek/fiber-task-list-backend/internal/database"
 	"github.com/gnotnek/fiber-task-list-backend/internal/models"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 // GetTodos godoc
@@ -48,6 +49,7 @@ func CreateTodo(c *fiber.Ctx) error {
 	if err := c.BodyParser(todo); err != nil {
 		return c.Status(400).SendString(err.Error())
 	}
+	todo.UserID = c.Locals("userID").(uuid.UUID)
 	database.DB.Create(&todo)
 	return c.JSON(todo)
 }

@@ -32,6 +32,6 @@ func InitDB() {
 		log.Fatalf("Error connecting to database: %v", err)
 	}
 
-	db.AutoMigrate(&models.Todo{})
+	db.AutoMigrate(&models.Todo{}, &models.User{})
 	DB = db
 }

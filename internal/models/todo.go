@@ -10,4 +10,6 @@ type Todo struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	Completed   bool      `json:"completed"`
+	UserID      uuid.UUID `json:"user_id"`
+	User        User      `json:"user" gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
