@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/gnotnek/fiber-task-list-backend/internal/database"
@@ -19,6 +18,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param user body models.User true "User info"
+// @Success 200 {object} map[string]string
 // @Router /register [post]
 func SignUp(c *fiber.Ctx) error {
 	user := new(models.User)
@@ -43,8 +43,8 @@ func SignUp(c *fiber.Ctx) error {
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param user body struct{email string, password string} true "User credentials"
-// @Success 200
+// @Param user body struct{Email string `json:"email"`; Password string `json:"password"`} true "User info"
+// @Success 200 {object} map[string]string
 // @Router /login [post]
 func Login(c *fiber.Ctx) error {
 	var user struct {
@@ -60,8 +60,6 @@ func Login(c *fiber.Ctx) error {
 	if dbUser.ID == uuid.Nil {
 		return c.Status(400).SendString("user not found")
 	}
-
-	fmt.Println(dbUser.Password)
 
 	err := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(user.Password))
 	if err != nil {

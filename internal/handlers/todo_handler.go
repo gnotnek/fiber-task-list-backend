@@ -16,7 +16,7 @@ import (
 // @Router /todos [get]
 func GetTodos(c *fiber.Ctx) error {
 	var todos []models.Todo
-	database.DB.Find(&todos)
+	database.DB.Where("user_id = ?", c.Locals("userID").(uuid.UUID)).Find(&todos)
 	return c.JSON(todos)
 }
 
@@ -64,7 +64,7 @@ func CreateTodo(c *fiber.Ctx) error {
 // @Router /todos/{id} [delete]
 func DeleteTodo(c *fiber.Ctx) error {
 	id := c.Params("id")
-	database.DB.Delete(&models.Todo{}, id)
+	database.DB.Where("id = ?", id).Delete(&models.Todo{})
 	return c.SendString("Todo deleted successfully")
 }
 
@@ -96,7 +96,7 @@ func UpdateTodoByID(c *fiber.Ctx) error {
 // @Success 200 {string} string "All todos completed successfully"
 // @Router /todos/complete [put]
 func CompleteAllTodos(c *fiber.Ctx) error {
-	database.DB.Model(&models.Todo{}).Update("completed", true)
+	database.DB.Model(&models.Todo{}).Where("user_id = ?", c.Locals("userID").(uuid.UUID)).Update("completed", true)
 	return c.SendString("All todos completed successfully")
 }
 
@@ -109,6 +109,6 @@ func CompleteAllTodos(c *fiber.Ctx) error {
 // @Router /todos/completed [get]
 func GetCompletedTodos(c *fiber.Ctx) error {
 	var todos []models.Todo
-	database.DB.Where("completed = ?", true).Find(&todos)
+	database.DB.Where("user_id = ? AND completed = ?", c.Locals("userID").(uuid.UUID), true).Find(&todos)
 	return c.JSON(todos)
 }
