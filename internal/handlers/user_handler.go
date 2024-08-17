@@ -17,8 +17,8 @@ import (
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param user body models.User true "User info"
-// @Success 200 {object} map[string]string
+// @Param {object} body string true "User email and password"
+// @Success 200 {object} map[string]string "user created"
 // @Router /register [post]
 func SignUp(c *fiber.Ctx) error {
 	user := new(models.User)
@@ -43,8 +43,8 @@ func SignUp(c *fiber.Ctx) error {
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param user body struct{Email string `json:"email"`; Password string `json:"password"`} true "User info"
-// @Success 200 {object} map[string]string
+// @Param {object} body string true "User email and password"
+// @Success 200 {object} map[string]string "login success!"
 // @Router /login [post]
 func Login(c *fiber.Ctx) error {
 	var user struct {

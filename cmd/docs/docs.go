@@ -17,29 +17,99 @@ const docTemplate = `{
     "paths": {
         "/login": {
             "post": {
-                "description": "This is a simple task list API",
+                "description": "Login",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "responses": {}
+                "tags": [
+                    "users"
+                ],
+                "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "User email and password",
+                        "name": "{object}",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
             }
         },
         "/register": {
             "post": {
-                "description": "This is a simple task list API",
+                "description": "Sign up",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "responses": {}
+                "tags": [
+                    "users"
+                ],
+                "summary": "Sign up",
+                "parameters": [
+                    {
+                        "description": "User email and password",
+                        "name": "password}",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
             }
         },
         "/todos": {
             "get": {
-                "description": "This is a simple task list API",
+                "description": "Get all todos",
                 "produces": [
                     "application/json"
                 ],
-                "responses": {}
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Get all todos",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Todo"
+                            }
+                        }
+                    }
+                }
             },
             "put": {
                 "description": "This is a simple task list API",
@@ -49,43 +119,225 @@ const docTemplate = `{
                 "responses": {}
             },
             "post": {
-                "description": "This is a simple task list API",
+                "description": "Create a new todo",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "responses": {}
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Create a new todo",
+                "parameters": [
+                    {
+                        "description": "Todo object",
+                        "name": "todo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Todo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Todo"
+                        }
+                    }
+                }
             }
         },
         "/todos/complete": {
             "put": {
-                "description": "This is a simple task list API",
+                "description": "Complete all todos",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Complete all todos",
+                "responses": {
+                    "200": {
+                        "description": "All todos completed successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/todos/completed": {
+            "get": {
+                "description": "Get all completed todos",
                 "produces": [
                     "application/json"
                 ],
-                "responses": {}
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Get all completed todos",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Todo"
+                            }
+                        }
+                    }
+                }
             }
         },
         "/todos/{id}": {
             "get": {
-                "description": "This is a simple task list API",
+                "description": "Get todo by ID",
                 "produces": [
                     "application/json"
                 ],
-                "responses": {}
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Get todo by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Todo ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Todo"
+                        }
+                    },
+                    "404": {
+                        "description": "Todo not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             },
             "put": {
-                "description": "This is a simple task list API",
+                "description": "Update a todo by ID",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "responses": {}
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Update a todo by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Todo ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Todo object",
+                        "name": "todo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Todo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Todo"
+                        }
+                    }
+                }
             },
             "delete": {
-                "description": "This is a simple task list API",
+                "description": "Delete todo by ID",
                 "produces": [
-                    "application/json"
+                    "text/plain"
                 ],
-                "responses": {}
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Delete todo by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Todo ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todo deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Todo": {
+            "type": "object",
+            "properties": {
+                "completed": {
+                    "type": "boolean"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "todos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Todo"
+                    }
+                }
             }
         }
     }

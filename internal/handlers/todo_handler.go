@@ -27,6 +27,7 @@ func GetTodos(c *fiber.Ctx) error {
 // @Produce json
 // @Param id path string true "Todo ID"
 // @Success 200 {object} models.Todo
+// @Failure 404 {string} string "Todo not found"
 // @Router /todos/{id} [get]
 func GetTodoByID(c *fiber.Ctx) error {
 	id := c.Params("id")

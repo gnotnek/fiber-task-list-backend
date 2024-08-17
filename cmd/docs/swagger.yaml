@@ -1,29 +1,119 @@
+definitions:
+  models.Todo:
+    properties:
+      completed:
+        type: boolean
+      description:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+      user_id:
+        type: string
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      password:
+        type: string
+      todos:
+        items:
+          $ref: '#/definitions/models.Todo'
+        type: array
+    type: object
 info:
   contact: {}
 paths:
   /login:
     post:
-      description: This is a simple task list API
+      consumes:
+      - application/json
+      description: Login
+      parameters:
+      - description: User email and password
+        in: body
+        name: '{object}'
+        required: true
+        schema:
+          type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login
+      tags:
+      - users
   /register:
     post:
-      description: This is a simple task list API
+      consumes:
+      - application/json
+      description: Sign up
+      parameters:
+      - description: User email and password
+        in: body
+        name: password}
+        required: true
+        schema:
+          type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Sign up
+      tags:
+      - users
   /todos:
     get:
-      description: This is a simple task list API
+      description: Get all todos
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Todo'
+            type: array
+      summary: Get all todos
+      tags:
+      - todos
     post:
-      description: This is a simple task list API
+      consumes:
+      - application/json
+      description: Create a new todo
+      parameters:
+      - description: Todo object
+        in: body
+        name: todo
+        required: true
+        schema:
+          $ref: '#/definitions/models.Todo'
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Todo'
+      summary: Create a new todo
+      tags:
+      - todos
     put:
       description: This is a simple task list API
       produces:
@@ -31,24 +121,97 @@ paths:
       responses: {}
   /todos/{id}:
     delete:
-      description: This is a simple task list API
+      description: Delete todo by ID
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
-      - application/json
-      responses: {}
+      - text/plain
+      responses:
+        "200":
+          description: Todo deleted successfully
+          schema:
+            type: string
+      summary: Delete todo by ID
+      tags:
+      - todos
     get:
-      description: This is a simple task list API
+      description: Get todo by ID
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Todo'
+        "404":
+          description: Todo not found
+          schema:
+            type: string
+      summary: Get todo by ID
+      tags:
+      - todos
     put:
-      description: This is a simple task list API
+      consumes:
+      - application/json
+      description: Update a todo by ID
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Todo object
+        in: body
+        name: todo
+        required: true
+        schema:
+          $ref: '#/definitions/models.Todo'
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Todo'
+      summary: Update a todo by ID
+      tags:
+      - todos
   /todos/complete:
     put:
-      description: This is a simple task list API
+      description: Complete all todos
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: All todos completed successfully
+          schema:
+            type: string
+      summary: Complete all todos
+      tags:
+      - todos
+  /todos/completed:
+    get:
+      description: Get all completed todos
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Todo'
+            type: array
+      summary: Get all completed todos
+      tags:
+      - todos
 swagger: "2.0"
