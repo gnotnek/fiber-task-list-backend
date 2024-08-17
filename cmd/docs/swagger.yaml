@@ -9,23 +9,8 @@ definitions:
         type: string
       title:
         type: string
-      user:
-        $ref: '#/definitions/models.User'
       user_id:
         type: string
-    type: object
-  models.User:
-    properties:
-      email:
-        type: string
-      id:
-        type: string
-      password:
-        type: string
-      todos:
-        items:
-          $ref: '#/definitions/models.Todo'
-        type: array
     type: object
 info:
   contact: {}
@@ -46,7 +31,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: login success!
           schema:
             additionalProperties:
               type: string
@@ -62,7 +47,7 @@ paths:
       parameters:
       - description: User email and password
         in: body
-        name: password}
+        name: '{object}'
         required: true
         schema:
           type: string
@@ -70,7 +55,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: user created
           schema:
             additionalProperties:
               type: string
@@ -114,11 +99,6 @@ paths:
       summary: Create a new todo
       tags:
       - todos
-    put:
-      description: This is a simple task list API
-      produces:
-      - application/json
-      responses: {}
   /todos/{id}:
     delete:
       description: Delete todo by ID

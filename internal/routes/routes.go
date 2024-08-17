@@ -7,7 +7,7 @@ import (
 )
 
 func SetupRoutes(app *fiber.App) {
-	//index
+	//default route
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Todo list API")
 	})

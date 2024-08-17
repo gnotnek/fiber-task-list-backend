@@ -41,7 +41,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "login success!",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -68,7 +68,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "User email and password",
-                        "name": "password}",
+                        "name": "{object}",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -78,7 +78,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "user created",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -110,13 +110,6 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "put": {
-                "description": "This is a simple task list API",
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {}
             },
             "post": {
                 "description": "Create a new todo",
@@ -312,31 +305,8 @@ const docTemplate = `{
                 "title": {
                     "type": "string"
                 },
-                "user": {
-                    "$ref": "#/definitions/models.User"
-                },
                 "user_id": {
                     "type": "string"
-                }
-            }
-        },
-        "models.User": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "todos": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Todo"
-                    }
                 }
             }
         }

@@ -23,7 +23,6 @@ import (
 // @router /todos/{id} [get]
 // @router /todos [post]
 // @router /todos/{id} [delete]
-// @router /todos [put]
 // @router /todos/{id} [put]
 // @router /todos/complete [put]
 // @router /register [post]
